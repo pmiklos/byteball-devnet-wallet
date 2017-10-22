@@ -1,5 +1,7 @@
 # byteball-devnet-wallet
-Docker image for the Byteball devnet GUI wallet 
+Docker image for the Byteball devnet GUI wallet.
+
+A prebuilt image is available at docker hub, see [pmiklos/byteball-devnet-wallet](https://github.com/pmiklos/byteball-devnet-wallet).
 
 ## Usage
 
