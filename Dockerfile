@@ -27,7 +27,7 @@ RUN	curl -SLO https://dl.nwjs.io/v$NW_VERSION/nwjs-sdk-v$NW_VERSION-linux-x64.ta
 ENV	TIMESTAMPER_ADDRESS ZQFHJXFWT2OCEBXF26GFXJU4MPASWPJT
 ENV	HUB 172.17.0.1:6611
 
-RUN	echo "Byteball 1.11.1dev" > /etc/byteball-release \
+RUN	echo "Byteball 1.11.2dev" > /etc/byteball-release \
 	&& mkdir /byteball /home/byteball/.config \
         && chown byteball:byteball /byteball /home/byteball/.config \
         && ln -s /byteball /home/byteball/.config/byteball \	
