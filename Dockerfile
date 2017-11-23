@@ -22,15 +22,15 @@ ENV	NW_VERSION 0.19.5
 RUN	curl -SLO https://dl.nwjs.io/v$NW_VERSION/nwjs-sdk-v$NW_VERSION-linux-x64.tar.gz \
 	&& tar xzf nwjs-sdk-v$NW_VERSION-linux-x64.tar.gz -C /usr/local \
 	&& ln -s /usr/local/nwjs-sdk-v$NW_VERSION-linux-x64/nw /usr/local/bin/nw \
-	&& rm nwjs-sdk-v$NW_VERSION-linux-x64.tar.gz 
+	&& rm nwjs-sdk-v$NW_VERSION-linux-x64.tar.gz
 
 ENV	TIMESTAMPER_ADDRESS ZQFHJXFWT2OCEBXF26GFXJU4MPASWPJT
 ENV	HUB 172.17.0.1:6611
 
-RUN	echo "Byteball 1.11.2dev" > /etc/byteball-release \
+RUN	echo "Byteball 1.11.5dev" > /etc/byteball-release \
 	&& mkdir /byteball /home/byteball/.config \
         && chown byteball:byteball /byteball /home/byteball/.config \
-        && ln -s /byteball /home/byteball/.config/byteball \	
+        && ln -s /byteball /home/byteball/.config/byteball \
 	&& su - byteball -c "git clone https://github.com/byteball/byteball.git \
 		&& cd byteball \
 		&& sed -r -i \
