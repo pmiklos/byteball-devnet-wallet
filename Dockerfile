@@ -1,8 +1,7 @@
-FROM	node:7.9
+FROM	node:5.12
 
-RUN	deluser --remove-home node \
-	&& groupadd --gid 1000 byteball \
-	&& useradd --uid 1000 --gid byteball --shell /bin/bash --create-home byteball
+RUN	groupadd --gid 1000 obyte \
+	&& useradd --uid 1000 --gid obyte --shell /bin/bash --create-home obyte
 
 RUN	npm install -g bower grunt-cli
 
@@ -13,42 +12,39 @@ RUN	apt-get update \
 		libgconf-2-4 \
 		libgl1-mesa-glx \
 		libgtk2.0-0 \
+		libgtk-3-0 \
 		libnss3 \
 		libxss1 \
 		libxtst6
 
-ENV	NW_VERSION 0.19.5
+ENV	NW_VERSION 0.14.7
 
 RUN	curl -SLO https://dl.nwjs.io/v$NW_VERSION/nwjs-sdk-v$NW_VERSION-linux-x64.tar.gz \
 	&& tar xzf nwjs-sdk-v$NW_VERSION-linux-x64.tar.gz -C /usr/local \
 	&& ln -s /usr/local/nwjs-sdk-v$NW_VERSION-linux-x64/nw /usr/local/bin/nw \
-	&& rm nwjs-sdk-v$NW_VERSION-linux-x64.tar.gz
+	&& rm nwjs-sdk-v$NW_VERSION-linux-x64.tar.gz \
+	&& chown -R obyte:obyte /usr/local/nwjs-sdk-v$NW_VERSION-linux-x64
 
-ENV	TIMESTAMPER_ADDRESS ZQFHJXFWT2OCEBXF26GFXJU4MPASWPJT
-ENV	HUB 172.17.0.1:6611
+ARG	VERSION=2.7.2
 
-RUN	echo "Byteball 2.4.2dev" > /etc/byteball-release \
-	&& mkdir /byteball /home/byteball/.config \
-        && chown byteball:byteball /byteball /home/byteball/.config \
-        && ln -s /byteball /home/byteball/.config/byteball \
-	&& su - byteball -c "git clone https://github.com/byteball/byteball.git \
-		&& cd byteball \
-		&& sed -r -i \
-			-e '/TIMESTAMPER_ADDRESS/s/[A-Z0-9]{32}/$TIMESTAMPER_ADDRESS/g' \
-			-e 's/byteball.org\/bb(-test)?/$HUB/g' \
-			src/js/services/configService.js \
-		&& bower --force install \
-		&& npm install --save pmiklos/byteball-devnet-config \
+RUN	echo "Obyte ${VERSION}dev" > /etc/obyte-release \
+	&& mkdir /obyte /home/obyte/.config \
+        && chown obyte:obyte /obyte /home/obyte/.config \
+        && ln -s /obyte /home/obyte/.config/byteball \
+	&& su - obyte -c "git clone https://github.com/byteball/obyte-gui-wallet.git \
+		&& cd obyte-gui-wallet \
+		&& git checkout aa \
+		&& echo devnet=1 > .env \
+		&& bower install -F \
 		&& npm install \
-		&& ./node_modules/.bin/byteball-devnet-config \
-		&& sed -r -i -e '/WS_PROTOCOL/s/wss:/ws:/' node_modules/byteballcore/conf.js \
 		&& grunt \
 		&& cp -ir node_modules/sqlite3/lib/binding/node-v*-linux-x64 node_modules/sqlite3/lib/binding/node-webkit-v$NW_VERSION-linux-x64"
 
-VOLUME	/byteball
+VOLUME	/obyte
 
-USER	byteball
-WORKDIR	/home/byteball
+USER	obyte
+WORKDIR	/home/obyte
+RUN	mkdir -p .local/share/mime/packages
 
-CMD	["nw", "byteball"]
+CMD	["nw", "obyte-gui-wallet"]
 
